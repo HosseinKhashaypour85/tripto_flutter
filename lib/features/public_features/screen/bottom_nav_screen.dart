@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 
 import '../../../const/theme/colors.dart';
 import '../logic/bottom_nav_cubit.dart';
@@ -15,7 +16,7 @@ class BottomNavBarScreen extends StatefulWidget {
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   List<Widget> screenList = [
-    Container(),
+    HomeScreen(),
     Container(),
     Container(),
     Container(),
@@ -27,7 +28,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       builder: (context, state) {
         return Scaffold(
           bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: primaryColor,
+            selectedItemColor: linkColor,
             showSelectedLabels: true,
             showUnselectedLabels: true,
             unselectedItemColor: Colors.black,
@@ -55,6 +56,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               BottomNavigationBarItem(
                 label: 'اعلان ها',
                 icon: Icon(Icons.notifications_outlined),
+                activeIcon: Icon(Icons.notifications),
               ),
               BottomNavigationBarItem(
                 label: 'حساب کاربری',

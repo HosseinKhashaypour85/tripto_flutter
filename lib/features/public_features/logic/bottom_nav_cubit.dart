@@ -7,6 +7,6 @@ class BottomNavCubit extends Cubit<int> {
   BottomNavCubit() : super(0);
   int currentIndex = 0;
   changeIndex(int index){
-    emit(index = currentIndex);
+    emit(currentIndex = index);
   }
 }
