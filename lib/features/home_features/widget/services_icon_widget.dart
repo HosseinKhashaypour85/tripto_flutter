@@ -20,8 +20,16 @@ class ServicesIconWidget extends StatelessWidget {
         Container(
           // padding: EdgeInsets.all(5.sp),
           decoration: BoxDecoration(
-            color: boxColors,
+            color: Colors.white,
             borderRadius: getBorderRadiusFunc(5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(2, 4),
+              ),
+            ],
           ),
           child: IconButton(
             onPressed: () {},

@@ -9,6 +9,8 @@ import 'package:tripto_flutter/features/public_features/logic/bottom_nav_cubit.d
 import 'package:tripto_flutter/features/public_features/screen/bottom_nav_screen.dart';
 import 'package:flutter/services.dart';
 
+import 'features/home_features/logic/cubit/carousel_cubit.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => BottomNavCubit(),
           ),
+          BlocProvider(
+            create: (context) => CarouselCubit(),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -42,9 +47,9 @@ class MyApp extends StatelessWidget {
           ],
           initialRoute: SplashScreen.screenId,
           routes: {
-            BottomNavBarScreen.screenId : (context) => BottomNavBarScreen(),
-            SplashScreen.screenId : (context)=> SplashScreen(),
-            HomeScreen.screenId : (context) => HomeScreen(),
+            BottomNavBarScreen.screenId: (context) => BottomNavBarScreen(),
+            SplashScreen.screenId: (context) => SplashScreen(),
+            HomeScreen.screenId: (context) => HomeScreen(),
           },
         ),
       ),
