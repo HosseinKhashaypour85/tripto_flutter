@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tripto_flutter/features/auth_features/screen/auth_screen.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 
 import '../../../const/theme/colors.dart';
@@ -19,7 +20,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     HomeScreen(),
     Container(),
     Container(),
-    Container(),
+    AuthScreen(),
   ];
 
   @override
