@@ -18,3 +18,9 @@ class SignInAuthErrorState extends AuthState {
 
   SignInAuthErrorState(this.errorMessageClass);
 }
+
+//Sign Up Logic
+class SignUpAuthCompletedState extends AuthState{
+  final String? token;
+  SignUpAuthCompletedState(this.token);
+}

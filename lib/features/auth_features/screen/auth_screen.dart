@@ -5,6 +5,7 @@ import 'package:tripto_flutter/const/shape/border_radius.dart';
 import 'package:tripto_flutter/const/shape/media_query.dart';
 import 'package:tripto_flutter/const/theme/colors.dart';
 import 'package:tripto_flutter/features/auth_features/logic/auth_bloc.dart';
+import 'package:tripto_flutter/features/auth_features/screen/sign_up_screen.dart';
 import 'package:tripto_flutter/features/auth_features/services/auth_api_repository.dart';
 import 'package:tripto_flutter/features/auth_features/widget/passwordfield_widget.dart';
 import 'package:tripto_flutter/features/auth_features/widget/textformfield_widget.dart';
@@ -125,7 +126,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      // Handle register navigation
+                      Navigator.pushNamed(
+                        context,
+                        SignUpScreen.screenId,
+                      );
                     },
                     child: const Text(
                       "حساب کاربری ندارید؟ ثبت نام کنید",
@@ -150,7 +154,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onPressed: () {
-                        // Handle phone verification
+                        BlocProvider.of<AuthBloc>(context).add(
+                          CallSignInEvent(
+                            _phoneController.text,
+                            _passwordController.text,
+                          ),
+                        );
                       },
                       child: const Text(
                         "تأیید و دریافت کد",
@@ -170,15 +179,17 @@ class _AuthScreenState extends State<AuthScreen> {
         },
         listener: (context, state) {
           if (state is SignInAuthErrorState) {
-            getSnackBarWidget(context, state.errorMessageClass.errorMsg!, Colors.red);
+            getSnackBarWidget(
+                context, state.errorMessageClass.errorMsg!, Colors.red);
           }
           if (state is SignInAuthCompletedState) {
             SecureStorage().saveUserToken(state.token);
             savePhoneNumber(_phoneController.text);
-            Navigator.pushReplacementNamed(
-              context,
-              BottomNavBarScreen.screenId,
-            );
+            // Navigator.pushReplacementNamed(
+            //   context,
+            //   BottomNavBarScreen.screenId,
+            // );
+            print('nice');
           }
         },
       ),

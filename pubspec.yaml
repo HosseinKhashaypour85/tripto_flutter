@@ -55,6 +55,7 @@ flutter:
     - assets/images/secondbanner.jpg
     - assets/images/thirdbanner.jpg
     - assets/images/fourthbanner.jpg
+    - assets/images/success.png
 
   fonts:
     - family: irs

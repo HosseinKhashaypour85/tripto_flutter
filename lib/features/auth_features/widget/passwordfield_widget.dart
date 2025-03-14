@@ -82,7 +82,7 @@ class _PasswordFieldWidgetState extends State<PasswordFieldWidget> {
           ),
         ),
       ),
-      validator: (String? value) {
+      validator: (value) {
         if (value!.trim().isEmpty) {
           return 'این فیلد نمی‌تواند خالی باشد';
         }
