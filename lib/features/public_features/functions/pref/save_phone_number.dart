@@ -5,7 +5,7 @@ Future<void>savePhoneNumber(String phoneNum)async{
   await pref.setString('phoneNum', phoneNum);
 }
 
-Future<void>getPhoneNumber(String phoneNum)async{
+Future<String?>getPhoneNumber()async{
   SharedPreferences pref = await SharedPreferences.getInstance();
-  await pref.getString('phoneNum');
+  return pref.getString('phoneNum');
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tripto_flutter/features/auth_features/screen/auth_screen.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
+import 'package:tripto_flutter/features/profile_features/screen/check_profile.dart';
+import 'package:tripto_flutter/features/public_features/logic/token_checker/token_check_cubit.dart';
 
 import '../../../const/theme/colors.dart';
 import '../logic/bottom_nav_cubit.dart';
@@ -20,8 +22,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     HomeScreen(),
     Container(),
     Container(),
-    AuthScreen(),
+    CheckProfile(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TokenCheckCubit>(context).tokenChecker();
+  }
 
   @override
   Widget build(BuildContext context) {

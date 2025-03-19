@@ -185,11 +185,11 @@ class _AuthScreenState extends State<AuthScreen> {
           if (state is SignInAuthCompletedState) {
             SecureStorage().saveUserToken(state.token);
             savePhoneNumber(_phoneController.text);
-            // Navigator.pushReplacementNamed(
-            //   context,
-            //   BottomNavBarScreen.screenId,
-            // );
-            print('nice');
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              BottomNavBarScreen.screenId,
+              (route) => false,
+            );
           }
         },
       ),

@@ -74,6 +74,7 @@ class TextFormFieldMobileWidget extends StatelessWidget {
         if (controller.selection ==
             TextSelection.fromPosition(
                 TextPosition(offset: controller.text.length - 1))) {}
+
       },
     );
   }

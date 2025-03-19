@@ -9,6 +9,7 @@ import 'package:tripto_flutter/features/auth_features/services/auth_api_reposito
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 import 'package:tripto_flutter/features/intro_features/splash_screen.dart';
 import 'package:tripto_flutter/features/public_features/logic/bottom_nav_cubit.dart';
+import 'package:tripto_flutter/features/public_features/logic/token_checker/token_check_cubit.dart';
 import 'package:tripto_flutter/features/public_features/screen/bottom_nav_screen.dart';
 import 'package:flutter/services.dart';
 
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => CarouselCubit(),
+          ),
+          BlocProvider(
+            create: (context) => TokenCheckCubit(),
           ),
           BlocProvider(
             create: (context) => AuthBloc(
