@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tripto_flutter/features/change_info_features/screen/change_info_screen.dart';
+import 'package:tripto_flutter/features/public_features/functions/pref/save_user_id.dart';
 
 import '../../../const/shape/border_radius.dart';
 import '../../../const/shape/media_query.dart';
@@ -28,6 +30,8 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
       phoneNumber = getNumber ?? '';
     });
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,7 +80,15 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
               Row(
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        ChangeInfoScreen.screenId,
+                        (route) => true,
+                      ).then(((_){
+                        _loadPhoneNumber();
+                      }));
+                    },
                     child: Text(
                       'ویرایش اطلاعات',
                       style: TextStyle(

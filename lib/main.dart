@@ -6,6 +6,8 @@ import 'package:tripto_flutter/const/theme/colors.dart';
 import 'package:tripto_flutter/features/auth_features/logic/auth_bloc.dart';
 import 'package:tripto_flutter/features/auth_features/screen/activation_code_screen.dart';
 import 'package:tripto_flutter/features/auth_features/services/auth_api_repository.dart';
+import 'package:tripto_flutter/features/change_info_features/logic/change_bloc.dart';
+import 'package:tripto_flutter/features/change_info_features/services/change_api_repository.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 import 'package:tripto_flutter/features/intro_features/splash_screen.dart';
 import 'package:tripto_flutter/features/public_features/logic/bottom_nav_cubit.dart';
@@ -15,7 +17,9 @@ import 'package:flutter/services.dart';
 
 import 'features/auth_features/screen/auth_screen.dart';
 import 'features/auth_features/screen/sign_up_screen.dart';
+import 'features/change_info_features/screen/change_info_screen.dart';
 import 'features/home_features/logic/cubit/carousel_cubit.dart';
+import 'features/user_charge_features/screen/user_charge_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +52,11 @@ class MyApp extends StatelessWidget {
               AuthApiRepository(),
             ),
           ),
+          BlocProvider(
+            create: (context) => ChangeBloc(
+              ChangeApiRepository(),
+            ),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -66,6 +75,8 @@ class MyApp extends StatelessWidget {
             HomeScreen.screenId: (context) => HomeScreen(),
             AuthScreen.screenId: (context) => AuthScreen(),
             SignUpScreen.screenId: (context) => SignUpScreen(),
+            ChangeInfoScreen.screenId: (context) => ChangeInfoScreen(),
+            AddBalanceScreen.screenId : (context) => AddBalanceScreen(),
           },
         ),
       ),

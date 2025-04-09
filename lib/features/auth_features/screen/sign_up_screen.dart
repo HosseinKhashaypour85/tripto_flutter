@@ -102,7 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           labelStyle: TextStyle(color: primary2Color, fontFamily: 'irs'),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: Colors.white,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Colors.grey),

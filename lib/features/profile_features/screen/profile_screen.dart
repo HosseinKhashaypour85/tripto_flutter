@@ -3,8 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tripto_flutter/const/shape/border_radius.dart';
 import 'package:tripto_flutter/const/shape/media_query.dart';
 import 'package:tripto_flutter/const/theme/colors.dart';
+import 'package:tripto_flutter/features/profile_features/widget/user_access_widget.dart';
 import 'package:tripto_flutter/features/profile_features/widget/user_accounting_widget.dart';
 import 'package:tripto_flutter/features/profile_features/widget/user_info_widget.dart';
+import 'package:tripto_flutter/features/public_features/functions/pref/save_user_id.dart';
+import 'package:tripto_flutter/features/public_features/functions/secure_storage/secure_storage.dart';
+import 'package:tripto_flutter/features/public_features/screen/bottom_nav_screen.dart';
+import 'package:tripto_flutter/features/public_features/widget/snack_bar_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,18 +21,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // List<Widget> userAccessWidget = [
-  //   UserAccessOptions(
-  //     icon: Icons.add,
-  //     title: 'title',
-  //   ),UserAccessOptions(
-  //     icon: Icons.add,
-  //     title: 'title',
-  //   ),UserAccessOptions(
-  //     icon: Icons.add,
-  //     title: 'title',
-  //   ),
-  // ];
+  Future<void> showId() async {
+    String? userId = await SaveUserId().getUserId();
+    if (userId != null) {
+      print('User ID: $userId');
+    } else {
+      print('No user ID found!');
+    }
+  }
+ @override
+  void initState() {
+    super.initState();
+    showId();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,118 +59,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               UserInfoWidget(),
               UserAccountingWidget(),
-              Container(
-                width: getAllWidth(context),
-                height: getHeight(context, 0.5.sp),
-                margin: EdgeInsets.all(10.sp),
-                padding: EdgeInsets.symmetric(vertical: 10.sp),
-                decoration: BoxDecoration(
-                  borderRadius: getBorderRadiusFunc(10),
-                  border: Border.all(
-                    color: boxColors,
-                    width: 2.w,
-                  ),
-                ),
-                child: ListView(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: [
-                    _createMenuItem(
-                      title: 'لیست مسافران',
-                      icon: Icons.people,
-                      onTap: () {
-
-                      },
-                    ),
-                    _createMenuItem(
-                      title: 'علاقه مندی ها',
-                      icon: Icons.star,
-                      onTap: null,
-                    ),
-                    _createMenuItem(
-                      title: 'مرکز پشتیبانی',
-                      icon: Icons.question_mark,
-                      onTap: null,
-                    ),
-                    _createMenuItem(
-                      title: 'درخواست پشتیبانی',
-                      icon: Icons.support_agent,
-                      onTap: null,
-                    ),
-                    _createMenuItem(
-                      title: 'درخواست پشتیبانی',
-                      icon: Icons.support_agent,
-                      onTap: null,
-                    ),
-                    _logOutMenuItem(
-                      title: 'خروج از حساب کاربری',
-                      icon: Icons.exit_to_app,
-                      onTap: null,
-                    )
-                  ],
-                ),
-              ),
+              UserAccessWidget(),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-Widget _createMenuItem(
-    {required String title,
-    required IconData icon,
-    required VoidCallback? onTap}) {
-  return Column(
-    children: [
-      ListTile(
-        leading: Icon(
-          icon,
-          color: primary2Color,
-        ),
-        onTap: onTap,
-        trailing: Icon(Icons.arrow_forward),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: primary2Color,
-            fontSize: 15.sp,
-            fontFamily: 'irs',
-          ),
-        ),
-      ),
-      Divider()
-    ],
-  );
-}
-
-Widget _logOutMenuItem(
-    {required String title,
-    required IconData icon,
-    required VoidCallback? onTap}) {
-  return Padding(
-    padding: EdgeInsets.all(8.sp),
-    child: Column(
-      children: [
-        ListTile(
-          leading: Icon(
-            icon,
-            color: Colors.red,
-          ),
-          onTap: onTap,
-          trailing: Icon(Icons.arrow_forward),
-          title: Text(
-            title,
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 15.sp,
-              fontFamily: 'irs',
-            ),
-          ),
-        ),
-        Divider(),
-      ],
-    ),
-  );
 }

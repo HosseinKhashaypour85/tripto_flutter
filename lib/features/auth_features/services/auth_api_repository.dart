@@ -10,7 +10,7 @@ class AuthApiRepository {
   }
 
 //   sign up future
-  Future<Response> callSignUpApi(String password, String passwordConfirm , String phoneNum , String userName) async {
+  Future<Response> callSignUpApi(String password, String passwordConfirm , String phoneNum , String userName , ) async {
     return await _apiServices.callSignUpApi(password, passwordConfirm , phoneNum , userName);
   }
 }
