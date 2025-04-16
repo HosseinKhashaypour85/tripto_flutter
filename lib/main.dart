@@ -10,15 +10,20 @@ import 'package:tripto_flutter/features/change_info_features/logic/change_bloc.d
 import 'package:tripto_flutter/features/change_info_features/services/change_api_repository.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 import 'package:tripto_flutter/features/intro_features/splash_screen.dart';
+import 'package:tripto_flutter/features/notifications_features/logic/notifications_bloc.dart';
+import 'package:tripto_flutter/features/notifications_features/services/notifications_api_repository.dart';
 import 'package:tripto_flutter/features/public_features/logic/bottom_nav_cubit.dart';
 import 'package:tripto_flutter/features/public_features/logic/token_checker/token_check_cubit.dart';
 import 'package:tripto_flutter/features/public_features/screen/bottom_nav_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:tripto_flutter/features/trips_history_features/logic/trips_history_bloc.dart';
+import 'package:tripto_flutter/features/trips_history_features/services/trips_api_repository.dart';
 
 import 'features/auth_features/screen/auth_screen.dart';
 import 'features/auth_features/screen/sign_up_screen.dart';
 import 'features/change_info_features/screen/change_info_screen.dart';
 import 'features/home_features/logic/cubit/carousel_cubit.dart';
+import 'features/trips_history_features/screen/trips_history_screen.dart';
 import 'features/user_charge_features/screen/user_charge_screen.dart';
 
 void main() {
@@ -57,6 +62,16 @@ class MyApp extends StatelessWidget {
               ChangeApiRepository(),
             ),
           ),
+          BlocProvider(
+            create: (context) => NotificationsBloc(
+              NotificationsApiRepository(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => TripsHistoryBloc(
+              TripsApiRepository(),
+            ),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -76,7 +91,8 @@ class MyApp extends StatelessWidget {
             AuthScreen.screenId: (context) => AuthScreen(),
             SignUpScreen.screenId: (context) => SignUpScreen(),
             ChangeInfoScreen.screenId: (context) => ChangeInfoScreen(),
-            AddBalanceScreen.screenId : (context) => AddBalanceScreen(),
+            AddBalanceScreen.screenId: (context) => AddBalanceScreen(),
+            TripsHistoryScreen.screenId: (context) => TripsHistoryScreen(),
           },
         ),
       ),

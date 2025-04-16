@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tripto_flutter/features/auth_features/screen/auth_screen.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
+import 'package:tripto_flutter/features/notifications_features/screen/notifications_screen.dart';
 import 'package:tripto_flutter/features/profile_features/screen/check_profile.dart';
 import 'package:tripto_flutter/features/public_features/logic/token_checker/token_check_cubit.dart';
 
 import '../../../const/theme/colors.dart';
+import '../../trips_history_features/screen/trips_history_screen.dart';
 import '../logic/bottom_nav_cubit.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
@@ -20,8 +22,8 @@ class BottomNavBarScreen extends StatefulWidget {
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   List<Widget> screenList = [
     HomeScreen(),
-    Container(),
-    Container(),
+    TripsHistoryScreen(),
+    NotificationsScreen(),
     CheckProfile(),
   ];
 
@@ -37,6 +39,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       builder: (context, state) {
         return Scaffold(
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
             selectedItemColor: linkColor,
             showSelectedLabels: true,
             showUnselectedLabels: true,

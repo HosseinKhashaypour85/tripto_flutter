@@ -50,8 +50,8 @@ class _UserAccessWidgetState extends State<UserAccessWidget> {
             onTap: null,
           ),
           _createMenuItem(
-            title: 'درخواست پشتیبانی',
-            icon: Icons.support_agent,
+            title: 'تماس با پشتیبانی',
+            icon: Icons.call,
             onTap: null,
           ),
           _createMenuItem(

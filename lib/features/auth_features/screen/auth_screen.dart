@@ -162,7 +162,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         );
                       },
                       child: const Text(
-                        "تأیید و دریافت کد",
+                        "تأیید و ورود",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
