@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,6 +12,8 @@ import 'package:tripto_flutter/features/change_info_features/logic/change_bloc.d
 import 'package:tripto_flutter/features/change_info_features/services/change_api_repository.dart';
 import 'package:tripto_flutter/features/home_features/screen/home_screen.dart';
 import 'package:tripto_flutter/features/intro_features/splash_screen.dart';
+import 'package:tripto_flutter/features/new_trip_features/bloc/new_trip_bloc.dart';
+import 'package:tripto_flutter/features/new_trip_features/services/new_trip_api_repository.dart';
 import 'package:tripto_flutter/features/notifications_features/logic/notifications_bloc.dart';
 import 'package:tripto_flutter/features/notifications_features/services/notifications_api_repository.dart';
 import 'package:tripto_flutter/features/public_features/logic/bottom_nav_cubit.dart';
@@ -23,6 +27,7 @@ import 'features/auth_features/screen/auth_screen.dart';
 import 'features/auth_features/screen/sign_up_screen.dart';
 import 'features/change_info_features/screen/change_info_screen.dart';
 import 'features/home_features/logic/cubit/carousel_cubit.dart';
+import 'features/new_trip_features/screen/new_trip_screen.dart';
 import 'features/trips_history_features/screen/trips_history_screen.dart';
 import 'features/user_charge_features/screen/user_charge_screen.dart';
 
@@ -32,6 +37,7 @@ void main() {
     statusBarColor: buttonColor,
     statusBarIconBrightness: Brightness.dark,
   ));
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -72,6 +78,11 @@ class MyApp extends StatelessWidget {
               TripsApiRepository(),
             ),
           ),
+          BlocProvider(
+            create: (context) => NewTripBloc(
+              NewTripApiRepository(),
+            ),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -93,9 +104,19 @@ class MyApp extends StatelessWidget {
             ChangeInfoScreen.screenId: (context) => ChangeInfoScreen(),
             AddBalanceScreen.screenId: (context) => AddBalanceScreen(),
             TripsHistoryScreen.screenId: (context) => TripsHistoryScreen(),
+            NewTripScreen.screenId: (context) => NewTripScreen(),
           },
         ),
       ),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

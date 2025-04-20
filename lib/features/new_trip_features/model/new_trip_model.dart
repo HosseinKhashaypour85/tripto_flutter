@@ -1,12 +1,12 @@
-class TripsHistoryModel {
-  TripsHistoryModel({
+class NewTripModel {
+  NewTripModel({
       this.page, 
       this.perPage, 
       this.totalItems, 
       this.totalPages, 
       this.items,});
 
-  TripsHistoryModel.fromJson(dynamic json) {
+  NewTripModel.fromJson(dynamic json) {
     page = json['page'];
     perPage = json['perPage'];
     totalItems = json['totalItems'];
@@ -24,6 +24,18 @@ class TripsHistoryModel {
   int? totalPages;
   List<Items>? items;
 
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['page'] = page;
+    map['perPage'] = perPage;
+    map['totalItems'] = totalItems;
+    map['totalPages'] = totalPages;
+    if (items != null) {
+      map['items'] = items?.map((v) => v.toJson()).toList();
+    }
+    return map;
+  }
+
 }
 
 class Items {
@@ -35,6 +47,7 @@ class Items {
       this.id, 
       this.originPlace, 
       this.roundTrip, 
+      this.tripPrice, 
       this.tripTime, 
       this.updated,});
 
@@ -46,20 +59,34 @@ class Items {
     id = json['id'];
     originPlace = json['origin_place'];
     roundTrip = json['round_trip'];
+    tripPrice = json['trip_price'];
     tripTime = json['trip_time'];
     updated = json['updated'];
-    tripPrice = json['trip_price'] ?? 0;
   }
   String? collectionId;
   String? collectionName;
   String? created;
   String? destinationPlace;
-  int? tripPrice;
   String? id;
   String? originPlace;
   bool? roundTrip;
+  int? tripPrice;
   String? tripTime;
   String? updated;
 
-}
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['collectionId'] = collectionId;
+    map['collectionName'] = collectionName;
+    map['created'] = created;
+    map['destination_place'] = destinationPlace;
+    map['id'] = id;
+    map['origin_place'] = originPlace;
+    map['round_trip'] = roundTrip;
+    map['trip_price'] = tripPrice;
+    map['trip_time'] = tripTime;
+    map['updated'] = updated;
+    return map;
+  }
 
+}

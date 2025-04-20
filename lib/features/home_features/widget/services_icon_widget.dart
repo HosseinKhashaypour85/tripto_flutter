@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tripto_flutter/features/new_trip_features/screen/new_trip_screen.dart';
 
 import '../../../const/shape/border_radius.dart';
 import '../../../const/theme/colors.dart';
@@ -32,7 +33,9 @@ class ServicesIconWidget extends StatelessWidget {
             ],
           ),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, NewTripScreen.screenId,);
+            },
             icon: Icon(
               icon,
               color: primary3Color,

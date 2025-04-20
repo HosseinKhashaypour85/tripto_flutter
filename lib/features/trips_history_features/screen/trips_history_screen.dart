@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tripto_flutter/const/shape/border_radius.dart';
 import 'package:tripto_flutter/const/theme/colors.dart';
+import 'package:tripto_flutter/features/notifications_features/widget/app_bar_widget.dart';
 import 'package:tripto_flutter/features/public_features/functions/number_to_three/number_to_three.dart';
 import 'package:tripto_flutter/features/public_features/widget/empty_screen_widget.dart';
 import 'package:tripto_flutter/features/public_features/widget/error_screen_widget.dart';
@@ -34,6 +36,13 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
           CallTripsHistoryEvent(),
         ),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: buttonColor,
+          automaticallyImplyLeading: false,
+          actions: [
+            AppBarWidget(),
+          ],
+        ),
         backgroundColor: Colors.white,
         body: BlocBuilder<TripsHistoryBloc, TripsHistoryState>(
           builder: (context, state) {
@@ -45,7 +54,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
               );
             }
             if (state is TripsHistoryCompletedState) {
-              return ScreenContent(tripsHistoryModel: state.tripsHistoryModel);
+              return ScreenContent(tripsHistoryModel: state.tripsHistoryModel , );
             }
             if (state is TripsHistoryErrorState) {
               return ErrorScreenWidget(
@@ -60,4 +69,3 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
     );
   }
 }
-
