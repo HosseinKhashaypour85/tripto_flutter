@@ -36,7 +36,9 @@ class Items {
       this.originPlace, 
       this.roundTrip, 
       this.tripTime, 
-      this.updated,});
+      this.updated,
+    this.tripId,
+  });
 
   Items.fromJson(dynamic json) {
     collectionId = json['collectionId'];
@@ -49,6 +51,7 @@ class Items {
     tripTime = json['trip_time'];
     updated = json['updated'];
     tripPrice = json['trip_price'] ?? 0;
+    tripId = json['trip_id'];
   }
   String? collectionId;
   String? collectionName;
@@ -60,6 +63,6 @@ class Items {
   bool? roundTrip;
   String? tripTime;
   String? updated;
-
+  String? tripId;
 }
 

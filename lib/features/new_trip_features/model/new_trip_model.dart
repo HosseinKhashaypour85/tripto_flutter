@@ -1,10 +1,11 @@
 class NewTripModel {
   NewTripModel({
-      this.page, 
-      this.perPage, 
-      this.totalItems, 
-      this.totalPages, 
-      this.items,});
+    this.page,
+    this.perPage,
+    this.totalItems,
+    this.totalPages,
+    this.items,
+  });
 
   NewTripModel.fromJson(dynamic json) {
     page = json['page'];
@@ -18,38 +19,28 @@ class NewTripModel {
       });
     }
   }
+
   int? page;
   int? perPage;
   int? totalItems;
   int? totalPages;
   List<Items>? items;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['page'] = page;
-    map['perPage'] = perPage;
-    map['totalItems'] = totalItems;
-    map['totalPages'] = totalPages;
-    if (items != null) {
-      map['items'] = items?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
-
 }
 
 class Items {
   Items({
-      this.collectionId, 
-      this.collectionName, 
-      this.created, 
-      this.destinationPlace, 
-      this.id, 
-      this.originPlace, 
-      this.roundTrip, 
-      this.tripPrice, 
-      this.tripTime, 
-      this.updated,});
+    this.collectionId,
+    this.collectionName,
+    this.created,
+    this.destinationPlace,
+    this.id,
+    this.originPlace,
+    this.roundTrip,
+    this.tripPrice,
+    this.tripTime,
+    this.tripId,
+    this.updated,
+  });
 
   Items.fromJson(dynamic json) {
     collectionId = json['collectionId'];
@@ -63,6 +54,7 @@ class Items {
     tripTime = json['trip_time'];
     updated = json['updated'];
   }
+
   String? collectionId;
   String? collectionName;
   String? created;
@@ -73,20 +65,5 @@ class Items {
   int? tripPrice;
   String? tripTime;
   String? updated;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['collectionId'] = collectionId;
-    map['collectionName'] = collectionName;
-    map['created'] = created;
-    map['destination_place'] = destinationPlace;
-    map['id'] = id;
-    map['origin_place'] = originPlace;
-    map['round_trip'] = roundTrip;
-    map['trip_price'] = tripPrice;
-    map['trip_time'] = tripTime;
-    map['updated'] = updated;
-    return map;
-  }
-
+  String? tripId;
 }

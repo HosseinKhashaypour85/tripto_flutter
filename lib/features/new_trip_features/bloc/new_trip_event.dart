@@ -8,11 +8,13 @@ class CallNewTripEvent extends NewTripEvent {
   final String destinationPlace;
   final String tripPrice;
   final bool isRoundTrip;
+  final String? tripId;
 
   CallNewTripEvent({
     required this.originPlace,
     required this.destinationPlace,
     required this.tripPrice,
     required this.isRoundTrip,
+    required this.tripId
   });
 }

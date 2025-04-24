@@ -22,6 +22,7 @@ class NewTripBloc extends Bloc<NewTripEvent, NewTripState> {
           event.destinationPlace,
           event.isRoundTrip,
           event.tripPrice,
+          event.tripId!
         );
         emit(NewTripCompletedState(newTripModel: newTripModel));
       } on DioException catch (e) {

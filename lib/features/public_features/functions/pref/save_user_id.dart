@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SaveUserId {
-  Future<void> saveUserId(String id) async {
+  Future<void> saveUserId(String tripId) async {
     final pref = await SharedPreferences.getInstance();
-    await pref.setString('userId', id);
+    await pref.setString('userId', tripId);
   }
 
   Future<String?> getUserId() async {
@@ -11,3 +11,4 @@ class SaveUserId {
     return pref.getString('userId');
   }
 }
+

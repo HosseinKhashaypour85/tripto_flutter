@@ -5,8 +5,8 @@ import 'package:tripto_flutter/features/public_features/widget/empty_screen_widg
 
 import '../../../const/theme/colors.dart';
 
-class ScreenContent extends StatelessWidget {
-  const ScreenContent({super.key, required this.notificationsModel});
+class NotificationsScreenContent extends StatelessWidget {
+  const NotificationsScreenContent({super.key, required this.notificationsModel});
 
   final NotificationsModel notificationsModel;
 
@@ -25,7 +25,7 @@ class ScreenContent extends StatelessWidget {
         final helper = notificationsModel.items![index];
         return Card(
           color: buttonColor,
-          elevation: 5,
+          elevation: 3,
           margin: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 16.sp),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.sp),

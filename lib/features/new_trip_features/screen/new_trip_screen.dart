@@ -8,11 +8,15 @@ import 'package:tripto_flutter/const/theme/colors.dart';
 import 'package:tripto_flutter/features/new_trip_features/bloc/new_trip_bloc.dart';
 import 'package:tripto_flutter/features/new_trip_features/services/new_trip_api_repository.dart';
 import 'package:tripto_flutter/features/public_features/functions/number_to_three/number_to_three.dart';
+import 'package:tripto_flutter/features/public_features/functions/pref/save_user_id.dart';
 import 'package:tripto_flutter/features/public_features/functions/price_generator/price_generator.dart';
 import 'package:tripto_flutter/features/public_features/logic/token_checker/token_check_cubit.dart';
 import 'package:tripto_flutter/features/public_features/screen/bottom_nav_screen.dart';
 import 'package:tripto_flutter/features/public_features/widget/error_screen_widget.dart';
 import 'package:tripto_flutter/features/public_features/widget/snack_bar_widget.dart';
+
+import '../../public_features/functions/id_generator/trip_id_generator.dart';
+import '../../public_features/functions/pref/save_trip_id.dart';
 
 class NewTripScreen extends StatefulWidget {
   const NewTripScreen({super.key});
@@ -24,33 +28,43 @@ class NewTripScreen extends StatefulWidget {
 }
 
 class _NewTripScreenState extends State<NewTripScreen> {
-  String? originCity;
-  String? destinationCity;
+  String originCity = '';  // مقدار پیش‌فرض برای شهر مبدا
+  String destinationCity = '';  // مقدار پیش‌فرض برای شهر مقصد
   List<String> cities = [];
   String selectedTripType = 'یک طرفه';
   int numberOfPassengers = 1;
   bool isDomestic = true;
   bool isLoading = true;
-  DateTime? selectedDate;
-  int? finalPrice;
+  DateTime selectedDate = DateTime.now();  // مقدار پیش‌فرض برای تاریخ
+  int finalPrice = 0;  // مقدار پیش‌فرض برای قیمت
+  bool shouldChangeTheValue = false;
+  String tripId = 'defaultTripId';  // مقدار پیش‌فرض برای tripId
 
   @override
   void initState() {
     super.initState();
     fetchCities();
+    showTripId();
   }
 
+  // دریافت tripId ذخیره‌شده
+  void showTripId() async {
+    final savedTripId = await SaveTripId().getTripId();
+    setState(() {
+      tripId = savedTripId ?? 'defaultTripId';  // اگر مقدار tripId نال باشد، از یک مقدار پیش‌فرض استفاده می‌شود
+    });
+  }
+
+  // بارگذاری لیست شهرها
   Future<void> fetchCities() async {
     final Dio dio = Dio();
     try {
-      final response =
-          await dio.get('https://iranplacesapi.liara.run/api/cities');
+      final response = await dio.get('https://iranplacesapi.liara.run/api/cities');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         if (data is List) {
           setState(() {
-            cities =
-                data.map<String>((city) => city['name'].toString()).toList();
+            cities = data.map<String>((city) => city['name'].toString()).toList();
             isLoading = false;
           });
         }
@@ -61,10 +75,11 @@ class _NewTripScreenState extends State<NewTripScreen> {
     }
   }
 
+  // انتخاب تاریخ
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: selectedDate,  // از selectedDate به‌عنوان تاریخ اولیه استفاده می‌کنیم
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 1),
       builder: (context, child) {
@@ -100,8 +115,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.arrow_forward, color: Colors.white),
-              onPressed: () =>
-                  Navigator.pushNamed(context, BottomNavBarScreen.screenId),
+              onPressed: () => Navigator.pushNamed(context, BottomNavBarScreen.screenId),
             ),
           ],
         ),
@@ -122,13 +136,13 @@ class _NewTripScreenState extends State<NewTripScreen> {
                 _buildCityCard(
                   title: 'مبدا',
                   value: originCity,
-                  onChanged: (value) => setState(() => originCity = value),
+                  onChanged: (value) => setState(() => originCity = value!),
                 ),
                 SizedBox(height: 20),
                 _buildCityCard(
                   title: 'مقصد',
                   value: destinationCity,
-                  onChanged: (value) => setState(() => destinationCity = value),
+                  onChanged: (value) => setState(() => destinationCity = value!),
                 ),
                 SizedBox(height: 20),
                 _buildDatePickerCard(),
@@ -146,15 +160,10 @@ class _NewTripScreenState extends State<NewTripScreen> {
                     } else if (state is TokenNotLoggedState) {
                       return ElevatedButton(
                         onPressed: () {
-                          getSnackBarWidget(
-                            context,
-                            'ابتدا وارد حساب کاربری شوید',
-                            Colors.red,
-                          );
+                          getSnackBarWidget(context, 'ابتدا وارد حساب کاربری شوید', Colors.red);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey,
-                          // padding: EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: getBorderRadiusFunc(12),
                           ),
@@ -162,7 +171,6 @@ class _NewTripScreenState extends State<NewTripScreen> {
                             getAllWidth(context),
                             getHeight(context, 0.05),
                           ),
-                          // elevation: 2,
                         ),
                         child: Text(
                           'وارد حساب کاربری شوید',
@@ -187,44 +195,52 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // دکمه جستجو یا خرید بلیط
   Widget _buildSearchButton() {
     return SizedBox(
       width: getAllWidth(context),
       child: ElevatedButton(
         onPressed: () {
-          if (originCity == null ||
-              destinationCity == null ||
-              selectedDate == null) {
-            getSnackBarWidget(
-              context,
-              'لطفاً تمام اطلاعات را وارد کنید',
-              Colors.red,
-            );
-            return;
-          }
+          if (!shouldChangeTheValue) {
+            if (originCity.isEmpty || destinationCity.isEmpty || selectedDate == null) {
+              getSnackBarWidget(context, 'لطفاً تمام اطلاعات را وارد کنید', Colors.red);
+              return;
+            }
 
-          int price = generateRandomPrice(
-              isRoundTrip: selectedTripType == 'رفت و برگشت');
-          setState(() {
-            finalPrice = price;
-          });
-          BlocProvider.of<NewTripBloc>(context).add(
-            CallNewTripEvent(
-              originPlace: originCity!,
-              destinationPlace: destinationCity!,
-              tripPrice: finalPrice.toString(),
+            if (originCity == destinationCity) {
+              getSnackBarWidget(context, 'مبدا و مقصد نمی توانند یکی باشند !', Colors.red);
+              return;
+            }
+
+            int price = generateRandomPrice(
               isRoundTrip: selectedTripType == 'رفت و برگشت',
-            ),
-          );
-          if (originCity != null &&
-              destinationCity != null &&
-              selectedDate != null) {
-            getSnackBarWidget(
-                context, 'خرید بلیط با موفقیت انجام شد !', Colors.green);
+            );
+
+            setState(() {
+              finalPrice = price;
+              shouldChangeTheValue = true;
+            });
+
+            if (tripId.isEmpty) {
+              getSnackBarWidget(context, 'خطا در دریافت آیدی', Colors.red);
+              return;
+            }
+          } else {
+            BlocProvider.of<NewTripBloc>(context).add(
+              CallNewTripEvent(
+                tripId: tripId,
+                originPlace: originCity,
+                destinationPlace: destinationCity,
+                tripPrice: finalPrice.toString(),
+                isRoundTrip: selectedTripType == 'رفت و برگشت',
+              ),
+            );
+            getSnackBarWidget(context, 'خرید بلیط با موفقیت انجام شد !', Colors.green);
+
             Navigator.pushNamedAndRemoveUntil(
               context,
               BottomNavBarScreen.screenId,
-              (route) => false,
+                  (route) => false,
             );
           }
         },
@@ -237,7 +253,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
           elevation: 2,
         ),
         child: Text(
-          'جستجو پرواز',
+          shouldChangeTheValue ? 'خرید بلیط پرواز' : 'جستجوی پرواز',
           style: TextStyle(
             fontFamily: 'irs',
             fontSize: 16,
@@ -249,6 +265,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // انتخاب نوع پرواز (داخلی یا خارجی)
   Widget _buildFlightTypeToggle() {
     return Card(
       elevation: 2,
@@ -282,10 +299,11 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // ساخت دکمه برای انتخاب پرواز
   Widget _buildToggleButton(
       {required String text,
-      required bool isActive,
-      required VoidCallback onPressed}) {
+        required bool isActive,
+        required VoidCallback onPressed}) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       margin: EdgeInsets.symmetric(horizontal: 4),
@@ -317,6 +335,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // کارت برای انتخاب نوع سفر (یک طرفه یا رفت و برگشت)
   Widget _buildTripTypeCard() {
     return Card(
       elevation: 2,
@@ -340,9 +359,10 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // کارت برای انتخاب شهر
   Widget _buildCityCard({
     required String title,
-    required String? value,
+    required String value,
     required ValueChanged<String?> onChanged,
   }) {
     return Card(
@@ -357,40 +377,41 @@ class _NewTripScreenState extends State<NewTripScreen> {
                 style: TextStyle(color: Colors.grey[600], fontSize: 12)),
             isLoading
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Center(
-                      child: Text(
-                        'درحال بارگذاری شهر ها ...',
-                        style: TextStyle(
-                          fontFamily: 'irs',
-                        ),
-                      ),
-                    ),
-                  )
-                : DropdownButton<String>(
-                    value: value,
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    icon: Icon(
-                      Icons.location_on,
-                      color: buttonColor,
-                    ),
-                    hint: Text('انتخاب کنید',
-                        style: TextStyle(fontFamily: 'irs')),
-                    onChanged: onChanged,
-                    items: cities.map((String city) {
-                      return DropdownMenuItem<String>(
-                        value: city,
-                        child: Text(city, style: TextStyle(fontFamily: 'irs')),
-                      );
-                    }).toList(),
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Center(
+                child: Text(
+                  'درحال بارگذاری شهر ها ...',
+                  style: TextStyle(
+                    fontFamily: 'irs',
                   ),
+                ),
+              ),
+            )
+                : DropdownButton<String>(
+              value: value.isEmpty ? null : value,  // اینجا از مقدار غیر نال استفاده می‌کنیم
+              isExpanded: true,
+              underline: SizedBox(),
+              icon: Icon(
+                Icons.location_on,
+                color: buttonColor,
+              ),
+              hint: Text('انتخاب کنید',
+                  style: TextStyle(fontFamily: 'irs')),
+              onChanged: onChanged,
+              items: cities.map((String city) {
+                return DropdownMenuItem<String>(
+                  value: city,
+                  child: Text(city, style: TextStyle(fontFamily: 'irs')),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
     );
   }
 
+  // انتخاب تاریخ پرواز
   Widget _buildDatePickerCard() {
     return Card(
       elevation: 2,
@@ -419,6 +440,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // کارت تعداد مسافران
   Widget _buildPassengersCard() {
     return Card(
       elevation: 2,
@@ -465,6 +487,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
     );
   }
 
+  // نمایش قیمت قابل پرداخت
   Widget _displayFinalPrice() {
     return Row(
       spacing: 5.sp,
@@ -487,9 +510,9 @@ class _NewTripScreenState extends State<NewTripScreen> {
             ),
             finalPrice != null
                 ? getFormatPrice(
-                      finalPrice.toString(),
-                    ) +
-                    'تومان'
+              finalPrice.toString(),
+            ) +
+                'تومان'
                 : ''),
       ],
     );

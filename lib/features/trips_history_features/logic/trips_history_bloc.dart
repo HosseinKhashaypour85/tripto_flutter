@@ -13,17 +13,20 @@ part 'trips_history_state.dart';
 class TripsHistoryBloc extends Bloc<TripsHistoryEvent, TripsHistoryState> {
   final TripsApiRepository tripsApiRepository;
   TripsHistoryBloc(this.tripsApiRepository) : super(TripsHistoryInitial()) {
-    on<CallTripsHistoryEvent>((event, emit) async{
+    on<CallTripsHistoryEvent>((event, emit) async {
       emit(TripsHistoryLoadingState());
-      try{
-        TripsHistoryModel tripsHistoryModel = await tripsApiRepository.callTripsApiServices();
+      try {
+        TripsHistoryModel tripsHistoryModel = await tripsApiRepository.callTripsApiServices(event.tripId!);
         emit(TripsHistoryCompletedState(tripsHistoryModel: tripsHistoryModel));
+      } on DioException catch (dioError) {
+        emit(TripsHistoryErrorState(
+          error: ErrorMessageClass(errorMsg: ErrorExceptions().fromError(dioError)),
+        ));
+      } catch (e) {
+        emit(TripsHistoryErrorState(
+          error: ErrorMessageClass(errorMsg: e.toString()),
+        ));
       }
-          on DioException catch(e){
-            emit(TripsHistoryErrorState(
-                error: ErrorMessageClass(errorMsg: ErrorExceptions().fromError(e))));
-          }
-
     });
   }
 }
