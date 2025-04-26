@@ -25,9 +25,12 @@ import 'package:tripto_flutter/features/trips_history_features/services/trips_ap
 
 import 'features/auth_features/screen/auth_screen.dart';
 import 'features/auth_features/screen/sign_up_screen.dart';
+import 'features/biometric_services_features/biometric_screen.dart';
 import 'features/change_info_features/screen/change_info_screen.dart';
 import 'features/home_features/logic/cubit/carousel_cubit.dart';
 import 'features/new_trip_features/screen/new_trip_screen.dart';
+import 'features/search_features/screen/search_screen.dart';
+import 'features/trip_info_features/screen/trip_info_screen.dart';
 import 'features/trips_history_features/screen/trips_history_screen.dart';
 import 'features/user_charge_features/screen/user_charge_screen.dart';
 
@@ -105,6 +108,9 @@ class MyApp extends StatelessWidget {
             AddBalanceScreen.screenId: (context) => AddBalanceScreen(),
             TripsHistoryScreen.screenId: (context) => TripsHistoryScreen(),
             NewTripScreen.screenId: (context) => NewTripScreen(),
+            TripInfoScreen.screenId: (context) => TripInfoScreen(),
+            ServiceSearchScreen.screenId: (context) => ServiceSearchScreen(),
+            BiometricScreen.screenId: (context) => BiometricScreen(),
           },
         ),
       ),
