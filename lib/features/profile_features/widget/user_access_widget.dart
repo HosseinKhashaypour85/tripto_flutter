@@ -59,6 +59,9 @@ class _UserAccessWidgetState extends State<UserAccessWidget> {
             icon: Icons.fingerprint,
             onTap: _toggleBiometricSetting,
             trailing: Switch(
+              focusColor: buttonColor,
+              activeColor: buttonColor,
+              inactiveTrackColor: Colors.red.shade400,
               value: _isBiometricEnabled,
               onChanged: (value) {
                 _toggleBiometricSetting();

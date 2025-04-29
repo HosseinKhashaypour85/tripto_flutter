@@ -36,6 +36,7 @@ import 'features/user_charge_features/screen/user_charge_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // init notifications
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: buttonColor,
     statusBarIconBrightness: Brightness.dark,

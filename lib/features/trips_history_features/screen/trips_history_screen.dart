@@ -13,7 +13,6 @@ import 'package:tripto_flutter/features/trips_history_features/logic/trips_histo
 import 'package:tripto_flutter/features/trips_history_features/model/trips_history_model.dart';
 import 'package:tripto_flutter/features/trips_history_features/services/trips_api_repository.dart';
 import 'package:tripto_flutter/features/trips_history_features/widget/screen_content.dart';
-import 'package:tripto_flutter/local_notification.dart';
 
 class TripsHistoryScreen extends StatefulWidget {
   const TripsHistoryScreen({super.key});

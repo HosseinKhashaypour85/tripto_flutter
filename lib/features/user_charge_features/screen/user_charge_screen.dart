@@ -22,7 +22,6 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
 
   List<int> suggestedAmounts = [10000, 50000, 100000];
 
-  // بارگذاری موجودی از SharedPreferences
   Future<void> _loadCurrentBalance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -30,7 +29,6 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
     });
   }
 
-  // ذخیره موجودی جدید در SharedPreferences
   Future<void> _addBalance(int amount) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int newBalance = currentBalance + amount;
@@ -38,7 +36,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
     setState(() {
       currentBalance = newBalance;
     });
-    getSnackBarWidget(context, 'مبلغ ${amount}  به حساب شما اضافه شد', Colors.green);
+    getSnackBarWidget(context, 'مبلغ ${getFormatPrice(amount.toString())} تومان به حساب شما اضافه شد', Colors.green);
   }
 
   void _selectSuggestedAmount(int amount) {
@@ -58,89 +56,187 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          'افزایش موجودی',
+          style: TextStyle(
+            fontFamily: 'irs',
+            fontSize: 18.sp,
+          ),
+        ),
+        centerTitle: true,
         backgroundColor: buttonColor,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16.sp),
+          ),
+        ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0.sp),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'موجودی فعلی: $currentBalance تومان',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'irs',
+            // Current Balance Card
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.sp),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16.sp),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'موجودی فعلی شما',
+                      style: TextStyle(
+                        fontFamily: 'irs',
+                        fontSize: 14.sp,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    SizedBox(height: 8.sp),
+                    Text(
+                      '${getFormatPrice(currentBalance.toString())} تومان',
+                      style: TextStyle(
+                        fontFamily: 'irs',
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 20.sp),
-            // نمایش FilterChip برای مبالغ پیشنهادی
+            SizedBox(height: 32.sp),
+
+            // Suggested Amounts
+            Text(
+              'مبالغ پیشنهادی',
+              style: TextStyle(
+                fontFamily: 'irs',
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.sp),
             Wrap(
-              spacing: 10.sp,
-              runSpacing: 10.sp,
+              spacing: 12.sp,
+              runSpacing: 12.sp,
               children: suggestedAmounts.map((amount) {
-                return FilterChip(
+                return ChoiceChip(
                   label: Text(
+                    '${getFormatPrice(amount.toString())} تومان',
                     style: TextStyle(
                       fontFamily: 'irs',
+                      color: selectedAmount == amount ? Colors.white : Theme.of(context).primaryColor,
                     ),
-                    '${getFormatPrice(
-                      amount.toString(),
-                    )}تومان',
                   ),
                   selected: selectedAmount == amount,
-                  onSelected: (isSelected) {
-                    _selectSuggestedAmount(amount);
-                    setState(() {
-                      isSelected = !isSelected;
-                    });
-                  },
-                  selectedColor: buttonColor,
-                  backgroundColor: Colors.grey[300],
-                  labelStyle: TextStyle(
-                    color:
-                        selectedAmount == amount ? Colors.white : Colors.black,
+                  onSelected: (isSelected) => _selectSuggestedAmount(amount),
+                  selectedColor: Theme.of(context).primaryColor,
+                  backgroundColor: Colors.grey.shade100,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.sp),
+                    side: BorderSide(
+                      color: selectedAmount == amount
+                          ? Colors.transparent
+                          : Colors.grey.shade300,
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.sp,
+                    vertical: 12.sp,
                   ),
                 );
               }).toList(),
             ),
-            SizedBox(height: 20.sp),
+            SizedBox(height: 32.sp),
+
+            // Custom Amount Input
+            Text(
+              'مبلغ دلخواه',
+              style: TextStyle(
+                fontFamily: 'irs',
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.sp),
             TextField(
               controller: _amountController,
-              decoration: const InputDecoration(
-                labelText: 'مقدار افزایش موجودی',
-                labelStyle: TextStyle(fontFamily: 'irs'),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: 'مبلغ را به تومان وارد کنید',
+                labelStyle: TextStyle(
+                  fontFamily: 'irs',
+                  color: Colors.grey.shade600,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.sp),
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade300,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.sp),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+                contentPadding: EdgeInsets.all(16.sp),
+                prefixIcon: Icon(
+                  Icons.attach_money_rounded,
+                  color: Colors.grey.shade500,
+                ),
+                suffixText: 'تومان',
+                suffixStyle: TextStyle(
+                  fontFamily: 'irs',
+                  color: Colors.grey.shade600,
+                ),
               ),
               keyboardType: TextInputType.number,
+              style: TextStyle(
+                fontFamily: 'irs',
+                fontSize: 16.sp,
+              ),
             ),
-            SizedBox(height: 20.sp),
-            Spacer(),
-            Center(
+            SizedBox(height: 40.sp),
+
+            // Add Balance Button
+            SizedBox(
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   int amount = int.tryParse(_amountController.text) ?? 0;
                   if (amount > 0) {
-                    _addBalance(amount); // افزایش موجودی
+                    _addBalance(amount);
+                    Navigator.pop(context);
                   } else {
                     getSnackBarWidget(
-                        context, 'لطفا مبلغ بیشتری وارد کنید', Colors.red);
+                        context,
+                        'لطفا مبلغ معتبری وارد کنید',
+                        Colors.red
+                    );
                   }
-                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(10.sp),
-                  fixedSize: Size(
-                    getAllWidth(context),
-                    getHeight(context, 0.05.sp),
+                  padding: EdgeInsets.symmetric(vertical: 16.sp),
+                  backgroundColor: buttonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.sp),
                   ),
-                  backgroundColor: linkColor,
+                  elevation: 0,
+                  shadowColor: Colors.transparent,
                 ),
                 child: Text(
                   'افزایش موجودی',
                   style: TextStyle(
-                    fontSize: 14.sp,
                     fontFamily: 'irs',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),

@@ -7,7 +7,7 @@ import '../../../const/shape/media_query.dart';
 class EmptyWidget extends StatelessWidget {
   const EmptyWidget({
     super.key,
-    required this.title,
+    required this.title, required IconData icon, required String subtitle,
   });
 
   final String title;
